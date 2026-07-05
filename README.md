@@ -42,3 +42,16 @@ Funcionalidades implementadas:
 - Validación de formatos PNG y BMP.
 - Ocultación de mensajes mediante técnica LSB.
 - Generación de imágenes con información oculta.
+
+## Requerimiento Funcional 2
+
+Estado: Completo
+
+Funcionalidades implementadas
+
+- Extracción de mensajes ocultos mediante LSB.
+- Conversión de bits a texto.
+- Lectura de bits desde imágenes.
+- Validación de mensajes inexistentes.
+- Compatibilidad con imágenes PNG.
+- Compatibilidad con imágenes BMP.
