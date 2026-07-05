@@ -1,38 +1,73 @@
 from modules.audio_lsb import (
-    abrir_audio,
-    calcular_capacidad,
-    validar_capacidad,
+    ocultar_mensaje,
+    extraer_mensaje,
 )
+
+
+def ejecutar_prueba():
+
+    mensaje = (
+        "Hola Profesor "
+        "este audio utiliza esteganografia LSB."
+    )
+
+    ocultar_mensaje(
+        "samples/audio/prueba.wav",
+        mensaje,
+        "output/audio_oculto.wav",
+    )
+
+    recuperado = extraer_mensaje(
+        "output/audio_oculto.wav"
+    )
+
+    print("=" * 60)
+
+    print("Mensaje original:")
+
+    print(mensaje)
+
+    print()
+
+    print("Mensaje recuperado:")
+
+    print(recuperado)
+
+    print()
+
+    print("¿Coinciden?:", mensaje == recuperado)
+
+    print("=" * 60)
+
+
+def prueba_sin_mensaje():
+
+    print()
+
+    print("=" * 60)
+
+    print("PRUEBA SIN MENSAJE")
+
+    print("=" * 60)
+
+    try:
+
+        extraer_mensaje(
+            "samples/audio/prueba.wav"
+        )
+
+    except Exception as e:
+
+        print("✓ Error detectado correctamente")
+
+        print(e)
 
 
 def main():
 
-    print("=" * 60)
-    print("RF03 - Audio WAV")
-    print("=" * 60)
+    ejecutar_prueba()
 
-    audio = abrir_audio(
-        "samples/audio/prueba.wav"
-    )
-
-    capacidad = calcular_capacidad(audio)
-
-    print("Capacidad:")
-
-    print(capacidad)
-
-    mensaje = "Hola Profesor"
-
-    print()
-
-    print("¿Cabe?")
-
-    print(
-        validar_capacidad(
-            audio,
-            mensaje,
-        )
-    )
+    prueba_sin_mensaje()
 
 
 if __name__ == "__main__":

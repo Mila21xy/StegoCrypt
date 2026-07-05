@@ -55,3 +55,14 @@ Funcionalidades implementadas
 - Validación de mensajes inexistentes.
 - Compatibilidad con imágenes PNG.
 - Compatibilidad con imágenes BMP.
+
+## Requerimiento Funcional 3
+
+Estado: ✅ Completado
+
+Funcionalidades implementadas
+
+- Ocultación de mensajes en archivos WAV.
+- Extracción de mensajes desde archivos WAV.
+- Validación de capacidad.
+- Detección de audios sin mensaje.
