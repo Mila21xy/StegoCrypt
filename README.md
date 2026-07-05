@@ -58,7 +58,7 @@ Funcionalidades implementadas
 
 ## Requerimiento Funcional 3
 
-Estado: ✅ Completado
+Estado: Completo
 
 Funcionalidades implementadas
 
@@ -66,3 +66,15 @@ Funcionalidades implementadas
 - Extracción de mensajes desde archivos WAV.
 - Validación de capacidad.
 - Detección de audios sin mensaje.
+
+## Requerimiento Funcional 4
+
+Estado: Implementación del módulo de cifrado completa
+
+Funcionalidades:
+
+- Generación automática de clave.
+- Almacenamiento seguro de la clave.
+- Cifrado mediante Fernet (AES).
+- Descifrado de mensajes.
+- Pruebas unitarias del módulo.
