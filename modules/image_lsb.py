@@ -8,7 +8,10 @@ utilizando la técnica Least Significant Bit (LSB).
 from PIL import Image
 from modules.utils import texto_a_bits
 from modules.utils import bits_a_texto
-
+from modules.crypto import (
+    cifrar as cifrar_texto,
+    descifrar as descifrar_texto,
+)
 DELIMITADOR = "###END###"
 
 FORMATOS_PERMITIDOS = (".png", ".bmp")
@@ -100,11 +103,18 @@ def ocultar_mensaje(
     ruta_imagen: str,
     mensaje: str,
     ruta_salida: str,
+    cifrar: bool = False,
 ):
 
     imagen = abrir_imagen(ruta_imagen)
 
-    validar_capacidad(imagen, mensaje)
+    if not validar_capacidad(imagen, mensaje):
+        raise ValueError(
+            "La imagen no tiene suficiente capacidad."
+        )    
+    
+    if cifrar:
+        mensaje = cifrar_texto(mensaje)
 
     mensaje += DELIMITADOR
 
@@ -116,7 +126,10 @@ def ocultar_mensaje(
 
     guardar_imagen(imagen, nuevos, ruta_salida)
 
-def extraer_mensaje(ruta_imagen: str) -> str:
+def extraer_mensaje(
+    ruta_imagen: str,
+    descifrar: bool = False,
+):
     """
     Extrae un mensaje oculto mediante LSB.
     """
@@ -134,4 +147,10 @@ def extraer_mensaje(ruta_imagen: str) -> str:
             "No se encontró un mensaje oculto."
         )
 
-    return texto[:posicion]
+
+    mensaje = texto[:posicion]
+
+    if descifrar:
+        mensaje = descifrar_texto(mensaje)
+
+    return mensaje

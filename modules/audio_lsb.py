@@ -8,6 +8,8 @@ from modules.utils import (
     texto_a_bits,
     bits_a_texto,
 )
+from modules.crypto import cifrar as cifrar_texto
+from modules.crypto import descifrar as descifrar_texto
 
 DELIMITADOR = "###END###"
 
@@ -28,6 +30,7 @@ def ocultar_mensaje(
     ruta_audio: str,
     mensaje: str,
     ruta_salida: str,
+    cifrar: bool = False,
 ) -> None:
 
     audio = wave.open(ruta_audio, "rb")
@@ -40,6 +43,9 @@ def ocultar_mensaje(
     parametros = audio.getparams()
 
     frames = bytearray(audio.readframes(audio.getnframes()))
+
+    if cifrar:
+        mensaje = cifrar_texto(mensaje)
 
     mensaje += DELIMITADOR
 
@@ -62,6 +68,7 @@ def ocultar_mensaje(
 
 def extraer_mensaje(
     ruta_audio: str,
+    descifrar: bool = False,
 ) -> str:
 
     audio = wave.open(ruta_audio, "rb")
@@ -86,4 +93,9 @@ def extraer_mensaje(
             "No se encontró un mensaje oculto."
         )
 
-    return texto[:posicion]
+    mensaje = texto[:posicion]
+
+    if descifrar:
+        mensaje = descifrar_texto(mensaje)
+
+    return mensaje
