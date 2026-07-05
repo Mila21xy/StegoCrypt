@@ -13,7 +13,13 @@ def texto_a_bits(texto):
     """
     Convierte un texto en una cadena de bits.
     """
-    pass
+
+    bits = ""
+
+    for caracter in texto:
+        bits += format(ord(caracter), "08b")
+
+    return bits
 
 
 def calcular_capacidad(imagen):
