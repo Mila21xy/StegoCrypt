@@ -6,6 +6,8 @@ utilizando la técnica Least Significant Bit (LSB).
 """
 
 from PIL import Image
+from modules.utils import texto_a_bits
+from modules.utils import bits_a_texto
 
 DELIMITADOR = "###END###"
 
@@ -23,31 +25,6 @@ def validar_formato(ruta_imagen: str) -> None:
 def abrir_imagen(ruta_imagen: str) -> Image.Image:
     validar_formato(ruta_imagen)
     return Image.open(ruta_imagen).convert("RGB")
-
-
-def texto_a_bits(texto: str) -> str:
-    """
-    Convierte un texto a una cadena de bits.
-    """
-    return "".join(format(ord(c), "08b") for c in texto)
-
-def bits_a_texto(bits: str) -> str:
-    """
-    Convierte una cadena de bits nuevamente a texto.
-    """
-
-    caracteres = []
-
-    for i in range(0, len(bits), 8):
-
-        byte = bits[i:i + 8]
-
-        if len(byte) < 8:
-            break
-
-        caracteres.append(chr(int(byte, 2)))
-
-    return "".join(caracteres)
 
 
 def obtener_bits_imagen(imagen: Image.Image) -> str:
