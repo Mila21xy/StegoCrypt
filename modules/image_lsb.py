@@ -1,8 +1,8 @@
 """
 Módulo: image_lsb.py
 
-Implementa funciones para ocultar mensajes
-en imágenes utilizando la técnica LSB.
+Ocultación de mensajes de texto en imágenes PNG y BMP
+utilizando la técnica Least Significant Bit (LSB).
 """
 
 from PIL import Image
@@ -12,41 +12,55 @@ DELIMITADOR = "###END###"
 FORMATOS_PERMITIDOS = (".png", ".bmp")
 
 
+def validar_formato(ruta_imagen: str) -> None:
+    """
+    Verifica que la imagen tenga un formato permitido.
+    """
+    if not ruta_imagen.lower().endswith(FORMATOS_PERMITIDOS):
+        raise ValueError("Solo se permiten imágenes PNG y BMP.")
+
+
+def abrir_imagen(ruta_imagen: str) -> Image.Image:
+    validar_formato(ruta_imagen)
+    return Image.open(ruta_imagen).convert("RGB")
+
+
 def texto_a_bits(texto: str) -> str:
+    """
+    Convierte un texto a una cadena de bits.
+    """
     return "".join(format(ord(c), "08b") for c in texto)
 
 
 def calcular_capacidad(imagen: Image.Image) -> int:
+    """
+    Calcula la capacidad máxima de caracteres.
+    """
+
     ancho, alto = imagen.size
-    return (ancho * alto * 3) // 8
+
+    bits = ancho * alto * 3
+
+    return bits // 8
 
 
 def validar_capacidad(imagen: Image.Image, mensaje: str) -> bool:
-    return len(mensaje + DELIMITADOR) <= calcular_capacidad(imagen)
+
+    capacidad = calcular_capacidad(imagen)
+
+    return len(mensaje + DELIMITADOR) <= capacidad
 
 
+def obtener_pixeles(imagen: Image.Image):
 
-def ocultar_mensaje(
-    ruta_imagen: str,
-    mensaje: str,
-    ruta_salida: str,
-) -> None:
+    return list(imagen.getdata())
 
-    validar_formato(ruta_imagen)
-    imagen = Image.open(ruta_imagen).convert("RGB")
 
-    if not validar_capacidad(imagen, mensaje):
-        raise ValueError("La imagen no tiene suficiente capacidad.")
+def modificar_lsb(pixeles, bits):
 
-    mensaje += DELIMITADOR
-
-    bits = texto_a_bits(mensaje)
+    nuevos = []
 
     indice = 0
-
-    pixeles = list(imagen.getdata())
-
-    nuevos_pixeles = []
 
     for r, g, b in pixeles:
 
@@ -56,24 +70,38 @@ def ocultar_mensaje(
 
             if indice < len(bits):
 
-                rgb[i] = (rgb[i] & 0b11111110) | int(bits[indice])
+                rgb[i] = (rgb[i] & 254) | int(bits[indice])
 
                 indice += 1
 
-        nuevos_pixeles.append(tuple(rgb))
+        nuevos.append(tuple(rgb))
 
-    imagen.putdata(nuevos_pixeles)
+    return nuevos
+
+
+def guardar_imagen(imagen: Image.Image, pixeles, ruta_salida: str):
+
+    imagen.putdata(pixeles)
 
     imagen.save(ruta_salida)
 
-def validar_formato(ruta_imagen: str) -> None:
-    """
-    Verifica que la imagen sea PNG o BMP.
-    """
 
-    ruta = ruta_imagen.lower()
+def ocultar_mensaje(
+    ruta_imagen: str,
+    mensaje: str,
+    ruta_salida: str,
+):
 
-    if not ruta.endswith(FORMATOS_PERMITIDOS):
-        raise ValueError(
-            "Solo se permiten imágenes PNG o BMP."
-        )
+    imagen = abrir_imagen(ruta_imagen)
+
+    validar_capacidad(imagen, mensaje)
+
+    mensaje += DELIMITADOR
+
+    bits = texto_a_bits(mensaje)
+
+    pixeles = obtener_pixeles(imagen)
+
+    nuevos = modificar_lsb(pixeles, bits)
+
+    guardar_imagen(imagen, nuevos, ruta_salida)
