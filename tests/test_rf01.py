@@ -8,44 +8,13 @@ from modules.image_lsb import (
 )
 
 
-def mostrar_info(ruta):
-
-    imagen = Image.open(ruta)
-
-    print("-" * 50)
-
-    print("Imagen:", ruta)
-
-    print("Resolución:", imagen.size)
-
-    print("Capacidad:", calcular_capacidad(imagen))
-
-    print()
-
-
-def main():
+def prueba_normal():
 
     print("=" * 60)
-    print("RF01 - Ocultación de mensajes")
+    print("PRUEBA 1")
     print("=" * 60)
 
     mensaje = "Hola Profesor"
-
-    print()
-
-    print("Mensaje:")
-
-    print(mensaje)
-
-    print()
-
-    print("Bits:")
-
-    print(texto_a_bits(mensaje))
-
-    print()
-
-    mostrar_info("samples/images/prueba.png")
 
     ocultar_mensaje(
         "samples/images/prueba.png",
@@ -53,11 +22,60 @@ def main():
         "output/prueba_oculta.png",
     )
 
-    print("Imagen generada correctamente.")
+    print("✓ Mensaje ocultado correctamente")
+
+
+def prueba_capacidad():
+
+    print("=" * 60)
+    print("PRUEBA 2")
+    print("=" * 60)
+
+    imagen = Image.open("samples/images/prueba.png")
+
+    capacidad = calcular_capacidad(imagen)
+
+    mensaje = "A" * (capacidad + 1)
+
+    print("Capacidad:", capacidad)
+
+    print("Mensaje:", len(mensaje))
+
+    print("¿Cabe?:", validar_capacidad(imagen, mensaje))
+
+
+def prueba_formato():
+
+    print("=" * 60)
+    print("PRUEBA 3")
+    print("=" * 60)
+
+    try:
+
+        ocultar_mensaje(
+            "README.md",
+            "Hola",
+            "output/test.png",
+        )
+
+    except Exception as e:
+
+        print("✓ Error detectado correctamente")
+
+        print(e)
+
+
+def main():
+
+    prueba_normal()
 
     print()
 
-    mostrar_info("output/prueba_oculta.png")
+    prueba_capacidad()
+
+    print()
+
+    prueba_formato()
 
 
 if __name__ == "__main__":

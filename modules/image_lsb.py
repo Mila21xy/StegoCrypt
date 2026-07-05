@@ -9,6 +9,8 @@ from PIL import Image
 
 DELIMITADOR = "###END###"
 
+FORMATOS_PERMITIDOS = (".png", ".bmp")
+
 
 def texto_a_bits(texto: str) -> str:
     return "".join(format(ord(c), "08b") for c in texto)
@@ -23,12 +25,14 @@ def validar_capacidad(imagen: Image.Image, mensaje: str) -> bool:
     return len(mensaje + DELIMITADOR) <= calcular_capacidad(imagen)
 
 
+
 def ocultar_mensaje(
     ruta_imagen: str,
     mensaje: str,
     ruta_salida: str,
 ) -> None:
 
+    validar_formato(ruta_imagen)
     imagen = Image.open(ruta_imagen).convert("RGB")
 
     if not validar_capacidad(imagen, mensaje):
@@ -61,3 +65,15 @@ def ocultar_mensaje(
     imagen.putdata(nuevos_pixeles)
 
     imagen.save(ruta_salida)
+
+def validar_formato(ruta_imagen: str) -> None:
+    """
+    Verifica que la imagen sea PNG o BMP.
+    """
+
+    ruta = ruta_imagen.lower()
+
+    if not ruta.endswith(FORMATOS_PERMITIDOS):
+        raise ValueError(
+            "Solo se permiten imágenes PNG o BMP."
+        )

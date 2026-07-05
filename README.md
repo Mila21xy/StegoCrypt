@@ -29,3 +29,16 @@ Proyecto de Esteganografía en Imágenes y Audio desarrollado en Python.
 - **output/**: Archivos generados por la aplicación (imágenes y audios con información oculta).
 - **tests/**: Pruebas del proyecto.
 - **ui/**: Interfaz gráfica desarrollada con PyQt5.
+
+## Requerimiento Funcional 1
+
+Estado: Completo
+
+Funcionalidades implementadas:
+
+- Conversión de texto a bits.
+- Cálculo de capacidad de imágenes.
+- Validación de capacidad.
+- Validación de formatos PNG y BMP.
+- Ocultación de mensajes mediante técnica LSB.
+- Generación de imágenes con información oculta.
