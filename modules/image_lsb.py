@@ -1,36 +1,57 @@
 """
 Módulo: image_lsb.py
 
-Implementa las funciones necesarias para ocultar mensajes
-en imágenes PNG y BMP utilizando la técnica LSB
-(Least Significant Bit).
+Implementa funciones para ocultar mensajes en imágenes
+utilizando la técnica LSB.
 """
 
 from PIL import Image
 
 
-def texto_a_bits(texto):
+def texto_a_bits(texto: str) -> str:
     """
     Convierte un texto en una cadena de bits.
     """
-
-    bits = ""
-
-    for caracter in texto:
-        bits += format(ord(caracter), "08b")
-
-    return bits
+    return "".join(format(ord(c), "08b") for c in texto)
 
 
-def calcular_capacidad(imagen):
+def calcular_capacidad(imagen: Image.Image) -> int:
     """
-    Calcula cuántos caracteres pueden ocultarse.
+    Calcula la cantidad máxima de caracteres que pueden ocultarse.
+
+    Se utiliza 1 bit por canal RGB.
+
+    3 bits por píxel.
+    8 bits por carácter.
     """
-    pass
+
+    ancho, alto = imagen.size
+
+    pixeles = ancho * alto
+
+    bits_disponibles = pixeles * 3
+
+    caracteres = bits_disponibles // 8
+
+    return caracteres
 
 
-def ocultar_mensaje(ruta_imagen, mensaje, ruta_salida):
+def validar_capacidad(imagen: Image.Image, mensaje: str) -> bool:
     """
-    Oculta un mensaje dentro de una imagen.
+    Verifica si el mensaje cabe dentro de la imagen.
+    """
+
+    capacidad = calcular_capacidad(imagen)
+
+    return len(mensaje) <= capacidad
+
+
+def ocultar_mensaje(
+    ruta_imagen: str,
+    mensaje: str,
+    ruta_salida: str,
+):
+    """
+    Se implementará en el siguiente bloque.
     """
     pass
