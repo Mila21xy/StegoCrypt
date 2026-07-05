@@ -4,27 +4,21 @@ from modules.image_lsb import (
     texto_a_bits,
     calcular_capacidad,
     validar_capacidad,
+    ocultar_mensaje,
 )
 
 
-def probar_imagen(ruta):
+def mostrar_info(ruta):
 
     imagen = Image.open(ruta)
 
-    capacidad = calcular_capacidad(imagen)
-
     print("-" * 50)
-    print(ruta)
+
+    print("Imagen:", ruta)
+
     print("Resolución:", imagen.size)
-    print("Capacidad:", capacidad, "caracteres")
 
-    mensaje = "Hola Mundo"
-
-    print("Mensaje:", mensaje)
-
-    print("Longitud:", len(mensaje))
-
-    print("¿Cabe?:", validar_capacidad(imagen, mensaje))
+    print("Capacidad:", calcular_capacidad(imagen))
 
     print()
 
@@ -32,24 +26,38 @@ def probar_imagen(ruta):
 def main():
 
     print("=" * 60)
-    print("RF01 - Conversión y capacidad")
+    print("RF01 - Ocultación de mensajes")
     print("=" * 60)
 
-    texto = "Hola"
+    mensaje = "Hola Profesor"
 
     print()
 
-    print("Texto:", texto)
+    print("Mensaje:")
+
+    print(mensaje)
+
+    print()
 
     print("Bits:")
 
-    print(texto_a_bits(texto))
+    print(texto_a_bits(mensaje))
 
     print()
 
-    probar_imagen("samples/images/prueba.png")
+    mostrar_info("samples/images/prueba.png")
 
-    probar_imagen("samples/images/prueba.bmp")
+    ocultar_mensaje(
+        "samples/images/prueba.png",
+        mensaje,
+        "output/prueba_oculta.png",
+    )
+
+    print("Imagen generada correctamente.")
+
+    print()
+
+    mostrar_info("output/prueba_oculta.png")
 
 
 if __name__ == "__main__":
