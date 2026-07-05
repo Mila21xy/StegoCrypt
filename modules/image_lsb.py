@@ -31,6 +31,39 @@ def texto_a_bits(texto: str) -> str:
     """
     return "".join(format(ord(c), "08b") for c in texto)
 
+def bits_a_texto(bits: str) -> str:
+    """
+    Convierte una cadena de bits nuevamente a texto.
+    """
+
+    caracteres = []
+
+    for i in range(0, len(bits), 8):
+
+        byte = bits[i:i + 8]
+
+        if len(byte) < 8:
+            break
+
+        caracteres.append(chr(int(byte, 2)))
+
+    return "".join(caracteres)
+
+
+def obtener_bits_imagen(imagen: Image.Image) -> str:
+    """
+    Obtiene todos los bits LSB de la imagen.
+    """
+
+    bits = ""
+
+    for r, g, b in imagen.getdata():
+
+        bits += str(r & 1)
+        bits += str(g & 1)
+        bits += str(b & 1)
+
+    return bits
 
 def calcular_capacidad(imagen: Image.Image) -> int:
     """
@@ -105,3 +138,23 @@ def ocultar_mensaje(
     nuevos = modificar_lsb(pixeles, bits)
 
     guardar_imagen(imagen, nuevos, ruta_salida)
+
+def extraer_mensaje(ruta_imagen: str) -> str:
+    """
+    Extrae un mensaje oculto mediante LSB.
+    """
+
+    imagen = abrir_imagen(ruta_imagen)
+
+    bits = obtener_bits_imagen(imagen)
+
+    texto = bits_a_texto(bits)
+
+    posicion = texto.find(DELIMITADOR)
+
+    if posicion == -1:
+        raise ValueError(
+            "No se encontró un mensaje oculto."
+        )
+
+    return texto[:posicion]
